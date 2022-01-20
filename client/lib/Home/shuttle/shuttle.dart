@@ -2,13 +2,12 @@ import 'package:animated_textformfields/animated_textformfield/animated_textform
 import 'package:flutter/material.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:se_app2/Data/data_airport.dart';
-import 'package:se_app2/main.dart';
-import 'package:se_app2/navigator/nav.dart';
-import '../../main.dart';
+import 'package:se_app2/Home/shuttle/search_driver.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:http/http.dart' as http;
+import 'Data/data_airport.dart';
 
 
 class shuttle extends StatefulWidget {
@@ -17,81 +16,21 @@ class shuttle extends StatefulWidget {
 }
 
 class _shuttleState extends State<shuttle> {
-
-  static ValueNotifier<String> enteredValue = ValueNotifier('');
-
-  // Position _currentUserPosition;
+  ValueNotifier<String> price = ValueNotifier('--');
   double distanceImMeter = 0.0;
   Data data = Data();
-  double price ;
   bool checklocation = false;
 
   Future _checklocation(String address) async {
-    List<Location> locations = await locationFromAddress("Gronausestraat 710, Enschede");
-
     try{
       List<Location> locations = await locationFromAddress(address);
       checklocation = true;
       print('check location');
       print(locations);
-
     }on Exception catch (_){
+      checklocation = false;
       print('error');
-
     }
-
-
-  }
-
-  Future _getTheDistance(String address) async {
-    List<Location> locations = await locationFromAddress(address);
-    print('location');
-    print(locations);
-
-    for (int i = 0; i < data.airport.length; i++) {
-      double storelat = data.airport[i]['lat'];
-      double storelng = data.airport[i]['lng'];
-
-      distanceImMeter = await Geolocator.distanceBetween(
-        locations[0].latitude,
-        locations[0].longitude,
-        storelat,
-        storelng,
-      );
-      var distance = distanceImMeter?.round().toInt();
-      // print('distance');
-      // print(distance);
-      data.airport[i]['distance'] = (distance / 1000 );
-      // print('data');
-      // print(data.airport[i]['distance']);
-      if(data.airport[i]['name'] == destination){
-        print(data.airport[i]['distance']);
-        if(typeshuttle == 'รถเก๋ง'){
-          price = 35 + data.airport[i]['distance'] * 3;
-
-        }
-        if(typeshuttle == 'รถตู้'){
-          price = 100 + data.airport[i]['distance'] * 3;
-
-        }
-        print('price');
-        print(price);
-      }
-
-      setState(() {});
-    }
-  }
-
-  String Address = 'search';
-
-  Future<void> GetAddressFromLatLong(Position position)async {
-    List<Placemark> placemarks = await placemarkFromCoordinates(13.7965, 100.3115477);
-    print(placemarks);
-    Placemark place = placemarks[0];
-    Address = '${place.street}, ${place.subLocality}, ${place.postalCode}, ${place.country}';
-    print('address ' + Address);
-    setState(()  {
-    });
   }
 
   FocusNode myFocusNode = FocusNode();
@@ -115,11 +54,71 @@ class _shuttleState extends State<shuttle> {
 
   @override
   void initState() {
+    save();
     super.initState();
     _timecontroller = TextEditingController();
     _yourlocationcontroller = TextEditingController();
     _startdatecontroller = TextEditingController();
 
+  }
+
+  Future save() async {
+    var res = await http.post("http://10.0.2.2:8080/shuttle/register_shuttlepartner",
+        headers: <String, String>{
+          'Context-Type': 'application/json;charSet=UTF-8'
+        },
+        body: <String, String>{
+          "username" : 'franky',
+          "display_name": 'นายสมปอง ดองงาน',
+          "car_brand": 'ฮอนด้า',
+          "car_registration": 'ฟฟ6207',
+          "phone": '097-3182012',
+          "email": 'franky123@gmail.com',
+        });
+    print(res.body);
+  }
+
+
+  Future _price(String address) async{
+    double sum_price;
+    // print('_timecontroller');
+    // print(_timecontroller.text);
+    // print(_startdatecontroller.text);
+    // print(_yourlocationcontroller.text);
+    // print(destination);
+    if(checklocation && _timecontroller.text != '' && _startdatecontroller.text != '' && _yourlocationcontroller != null && destination != null){
+      print('price');
+      List<Location> locations = await locationFromAddress(address);
+      print('location');
+      print(locations);
+
+      for (int i = 0; i < data.airport.length; i++) {
+        double storelat = data.airport[i]['lat'];
+        double storelng = data.airport[i]['lng'];
+
+        distanceImMeter = await Geolocator.distanceBetween(
+          locations[0].latitude,
+          locations[0].longitude,
+          storelat,
+          storelng,
+        );
+        var distance = distanceImMeter?.round().toInt();
+        data.airport[i]['distance'] = (distance / 1000 );
+        if(data.airport[i]['name'] == destination){
+          print(data.airport[i]['distance']);
+          if(typeshuttle == 'รถเก๋ง'){
+            sum_price = (35 + data.airport[i]['distance'] * 3);
+          }
+          if(typeshuttle == 'รถตู้'){
+            sum_price = 100 + data.airport[i]['distance'] * 5;
+          }
+          price.value = sum_price.toStringAsFixed(2).toString();
+          print('price');
+          print(price);
+        }
+        setState(() {});
+      }
+    }
   }
 
   @override
@@ -141,7 +140,6 @@ class _shuttleState extends State<shuttle> {
       ),
 
       body: SingleChildScrollView(
-
         child: Form(
             key: _formKey,
             child: Column(
@@ -164,7 +162,6 @@ class _shuttleState extends State<shuttle> {
                         style: GoogleFonts.nunitoSans(
                             color: Colors.black, fontSize: 15),
                       ),
-
                     ],
                   ),
                 ),
@@ -203,6 +200,12 @@ class _shuttleState extends State<shuttle> {
                             borderSide: BorderSide(color: Colors.white)),
                       ),
                       hint: const Text('รถเก๋ง',style: TextStyle(color: Colors.black),),
+                      // hint: Row(
+                      //     children: const <Widget>[
+                      //       Icon(Icons.directions_car ,size: 20,),
+                      //       Text('      ' + 'รถเก๋ง',style: TextStyle(color: Colors.black)),
+                      //     ]
+                      // ),
                       value: valuetype,
                       iconSize: 16,
                       icon: const Icon(Icons.arrow_drop_down, color: Colors.black,),
@@ -212,6 +215,7 @@ class _shuttleState extends State<shuttle> {
                         setState(() {
                           valuetype = newValue;
                           typeshuttle = valuetype;
+                          _price(_yourlocationcontroller.text);
                         });
                       },
                     ),
@@ -245,6 +249,7 @@ class _shuttleState extends State<shuttle> {
                         controller: _yourlocationcontroller,
                         onFieldSubmitted: (String newvalue) {
                           _checklocation(newvalue);
+                          _price(_yourlocationcontroller.text);
                         },
                         validator: (value) {
                           _checklocation(value);
@@ -290,10 +295,11 @@ class _shuttleState extends State<shuttle> {
                       icon: const Icon(Icons.arrow_drop_down, color: Colors.black,),
                       isExpanded: true,
                       items: item_airport.map(buildMenuItem).toList(),
-                      // validator: (value) => value == null ? "Select a country" : null,
+                      validator: (value) => value == null ? "Select a country" : null,
                       onChanged: (String newValue) {
                         setState(() {
                           destination = newValue;
+                          _price(_yourlocationcontroller.text);
                         });
                       },
                     ),
@@ -317,7 +323,6 @@ class _shuttleState extends State<shuttle> {
                         style: GoogleFonts.nunitoSans(
                             color: Colors.black, fontSize: 15),
                       ),
-
                     ],
                   ),
                 ),
@@ -359,6 +364,7 @@ class _shuttleState extends State<shuttle> {
                               "${date.day}-${date.month}-${date.year}";
                           _startdatecontroller.text =
                               formattedDate.toString();
+                          _price(_yourlocationcontroller.text);
                         },
                       ),
                       const SizedBox(
@@ -388,21 +394,11 @@ class _shuttleState extends State<shuttle> {
                             initialTime: TimeOfDay.now(),
                             context: context,
                           );
-                          FocusScope.of(context)
-                              .requestFocus(FocusNode());
                           if(pickedTime != null ){
-                            // print(pickedTime.format(context));   //output 10:51 PM
                             DateTime parsedTime = DateFormat.jm().parse(pickedTime.format(context).toString());
-                            //converting to DateTime so that we can further format on different pattern.
-                            // print(parsedTime); //output 1970-01-01 22:53:00.000
                             String formattedTime = DateFormat('HH:mm').format(parsedTime);
-                            // print(formattedTime); //output 14:59:00
-                            //DateFormat() is from intl package, you can format the time on any pattern you need.
                             _timecontroller.text = formattedTime.toString();
-                            // print('time = ' + _timecontroller.text);
-                            // setState(() {
-                            //   //set the value of text field.
-                            // });
+                            _price(_yourlocationcontroller.text);
                           }else{
                             print("Time is not selected");
                           }
@@ -434,10 +430,17 @@ class _shuttleState extends State<shuttle> {
                         style: GoogleFonts.nunitoSans(
                             color: Colors.black, fontSize: 18),
                       ),
-                      // ValueListenableBuilder(
-                      //     valueListenable: enteredValue,
-                      //     builder: builder)
-
+                      ValueListenableBuilder(
+                        valueListenable: price,
+                        builder: (BuildContext context,String newValue,Widget child) {
+                          return Text(
+                            newValue + '   THB',
+                            style: const TextStyle(
+                              fontSize: 18,
+                            ),
+                          );
+                        },
+                      ),
                     ],
                   ),
                 ),
@@ -458,16 +461,11 @@ class _shuttleState extends State<shuttle> {
                         borderWidth: 2,
                         text: "ค้นหา",
                         onPress: () {
-
                           saveOrder();
                         })),
-
               ],
             )
-
         ),
-
-
       ),
     );
   }
@@ -477,15 +475,15 @@ class _shuttleState extends State<shuttle> {
     }
     _formKey.currentState.save();
     _checklocation(_yourlocationcontroller.text);
-    _getTheDistance(_yourlocationcontroller.text);
     print('save');
     print(_startdatecontroller.text);
     print(typeshuttle);
     print(destination);
     print(_timecontroller.text);
     print(_yourlocationcontroller.text);
+    save();
+    Navigator.push(context, MaterialPageRoute(builder: (context) => search_driver()));
 
-    Navigator.push(context, MaterialPageRoute(builder: (context) => Nav()));
   }
 
   DropdownMenuItem<String> buildMenuItem(String item) => DropdownMenuItem(

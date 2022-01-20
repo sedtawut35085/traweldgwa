@@ -7,10 +7,12 @@ const mongoose = require('mongoose')
 
 mongoose.connect('mongodb+srv://admin:se1235@cluster0.inezx.mongodb.net/TravelDGwa?retryWrites=true&w=majority')
 
+var shuttleRoutes = require('./routes/shuttle_routes')
 app.use(cors())
 app.use(bodyParser.urlencoded({extended:true}))
 app.use(bodyParser.json())
 app.use('/',require('./routes/user_routes'))
+app.use('/shuttle',shuttleRoutes)
 
 app.listen(port, () => {
     console.log('port running on port : ' + port)
