@@ -7,16 +7,28 @@ import 'package:se_app2/Home/shuttle/info_driver.dart';
 import 'package:se_app2/Home/shuttle/shuttle.dart';
 
 class search_driver extends StatefulWidget {
+  String startdate,yourlocation,destination,starttime,typeshuttle,sumprice;
+  bool value_booknow;
+
+  search_driver({this.startdate,this.yourlocation,this.destination,this.starttime,this.typeshuttle,this.sumprice,this.value_booknow});
   @override
   _search_driverState createState() => _search_driverState();
 }
 class _search_driverState extends State<search_driver> {
 
+
   @override
   void initState() {
     Timer(Duration(seconds: 5), (){
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>
-          driver_info()));
+          driver_info( startdate: widget.startdate,
+            typeshuttle: widget.typeshuttle,
+            starttime: widget.starttime,
+            destination: widget.destination,
+            yourlocation: widget.yourlocation,
+            sumprice: widget.sumprice,
+            value_booknow: widget.value_booknow,
+          )));
     });
     super.initState();
   }
@@ -74,6 +86,7 @@ class _search_driverState extends State<search_driver> {
                   child: Container(
                     child: Column(
                       children: <Widget>[
+                        if(widget.value_booknow == false)
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -87,10 +100,11 @@ class _search_driverState extends State<search_driver> {
                               ),
                             ),
                             Container(
-                                child: Text('1 มกราคม พ.ศ. 2564')
+                                child: Text(widget.startdate)
                             ),
                           ],
                         ),
+                        if(widget.value_booknow == false)
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -105,7 +119,7 @@ class _search_driverState extends State<search_driver> {
                             ),
                             Container(
                               child: Text(
-                                '10.00 น.',
+                                widget.starttime,
                                 style: TextStyle(
                                     fontSize: 18.0,
                                     color: Color(0xff1D3557)
@@ -128,7 +142,7 @@ class _search_driverState extends State<search_driver> {
                             ),
                             Container(
                               child: Text(
-                                'Seadan',
+                                widget.typeshuttle,
                                 style: TextStyle(
                                     fontSize: 18.0,
                                     color: Color(0xff1D3557)
@@ -153,13 +167,17 @@ class _search_driverState extends State<search_driver> {
                                   ),
                                 ),
                                 SizedBox(height: 10.0),
-                                Text(
-                                  'Home 123/4',
-                                  style: TextStyle(
-                                    color: Color(0xff1D3557),
-                                    fontSize: 14.0,
+                                Container(
+                                  width: 85,
+                                  child: Text(
+                                    widget.yourlocation.length > 16 ? widget.yourlocation.substring(0,16)+'...' : widget.yourlocation,
+                                    style: TextStyle(
+                                      color: Color(0xff1D3557),
+                                      fontSize: 14.0,
+                                    ),textAlign: TextAlign.center,
+
                                   ),
-                                ),
+                                )
                               ],
                             ),
                             Padding(
@@ -184,7 +202,7 @@ class _search_driverState extends State<search_driver> {
                                 ),
                                 SizedBox(height: 10.0),
                                 Text(
-                                  'Suvarnabhumi Airport',
+                                  widget.destination,
                                   style: TextStyle(
                                     color: Color(0xff1D3557),
                                     fontSize: 14.0,
@@ -214,7 +232,7 @@ class _search_driverState extends State<search_driver> {
                             ),
                             Container(
                               child: Text(
-                                'THB 500.00',
+                                widget.sumprice,
                                 style: TextStyle(
                                     fontSize: 18.0,
                                     color: Color(0xff1D3557)

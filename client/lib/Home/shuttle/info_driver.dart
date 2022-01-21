@@ -3,11 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
 
 class driver_info extends StatefulWidget {
+  String startdate,yourlocation,destination,starttime,typeshuttle,sumprice;
+  bool value_booknow;
+
+
+
+
+
+  driver_info({this.startdate,this.yourlocation,this.destination,this.starttime,this.typeshuttle,this.sumprice,this.value_booknow});
   @override
   _driver_infoState createState() => _driver_infoState();
 }
 class _driver_infoState extends State<driver_info> {
-
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
@@ -59,7 +66,7 @@ class _driver_infoState extends State<driver_info> {
                           children: [
                             CircleAvatar(
                               radius: 30,
-                              backgroundImage: NetworkImage('https://scontent.fbkk22-1.fna.fbcdn.net/v/t1.6435-9/87418692_2534334413360429_900239756720340992_n.jpg?_nc_cat=101&ccb=1-5&_nc_sid=09cbfe&_nc_eui2=AeFLHDrfADPmt3PD-zjmQlhx4WDRGbfgEz_hYNEZt-ATP1r0Xd0uDOMKsfbOD3nhQhBh6t6MEFivH6dtoOtSFs5F&_nc_ohc=Y1lhivj-q4EAX9PmS7b&_nc_ht=scontent.fbkk22-1.fna&oh=00_AT8_1HLUFtEK0sG26WulMil3QJJxtdzJi7uuY-F_CtgDEg&oe=620F6F51'),
+                              // backgroundImage: NetworkImage(''),
                             ),
                           ],
                         ),
@@ -174,6 +181,7 @@ class _driver_infoState extends State<driver_info> {
                   child: Container(
                     child: Column(
                       children: <Widget>[
+                        if(widget.value_booknow == false)
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -187,10 +195,16 @@ class _driver_infoState extends State<driver_info> {
                               ),
                             ),
                             Container(
-                                child: Text('1 มกราคม พ.ศ. 2564')
+                                child: Text(widget.startdate, style: TextStyle(
+                                    fontSize: 18.0,
+                                    color: Color(0xff1D3557)
+                                ),)
                             ),
                           ],
                         ),
+                        if(widget.value_booknow == false)
+                        SizedBox(height: 5,),
+                        if(widget.value_booknow == false)
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -205,7 +219,7 @@ class _driver_infoState extends State<driver_info> {
                             ),
                             Container(
                               child: Text(
-                                '10.00 น.',
+                                widget.starttime,
                                 style: TextStyle(
                                     fontSize: 18.0,
                                     color: Color(0xff1D3557)
@@ -214,6 +228,8 @@ class _driver_infoState extends State<driver_info> {
                             ),
                           ],
                         ),
+                        if(widget.value_booknow == false)
+                        SizedBox(height: 5,),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -228,7 +244,7 @@ class _driver_infoState extends State<driver_info> {
                             ),
                             Container(
                               child: Text(
-                                'Seadan',
+                                widget.typeshuttle,
                                 style: TextStyle(
                                     fontSize: 18.0,
                                     color: Color(0xff1D3557)
@@ -253,13 +269,17 @@ class _driver_infoState extends State<driver_info> {
                                   ),
                                 ),
                                 SizedBox(height: 10.0),
-                                Text(
-                                  'Home 123/4',
-                                  style: TextStyle(
-                                    color: Color(0xff1D3557),
-                                    fontSize: 14.0,
+                                Container(
+                                  width: 85,
+                                  child: Text(
+                                    widget.yourlocation.length > 40 ? widget.yourlocation.substring(0,40)+'...' : widget.yourlocation,
+                                    style: TextStyle(
+                                      color: Color(0xff1D3557),
+                                      fontSize: 14.0,
+                                    ),textAlign: TextAlign.center,
+
                                   ),
-                                ),
+                                )
                               ],
                             ),
                             Padding(
@@ -283,17 +303,22 @@ class _driver_infoState extends State<driver_info> {
                                   ),
                                 ),
                                 SizedBox(height: 10.0),
-                                Text(
-                                  'Suvarnabhumi Airport',
-                                  style: TextStyle(
-                                    color: Color(0xff1D3557),
-                                    fontSize: 14.0,
+                                Container(
+                                  width: 90,
+                                  child: Text(
+                                    widget.destination,
+                                    style: TextStyle(
+                                      color: Color(0xff1D3557),
+                                      fontSize: 14.0,
+                                    ),textAlign: TextAlign.center,
+
                                   ),
                                 ),
                               ],
                             ),
                           ],
                         ),
+                        SizedBox(height: 10,),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -308,7 +333,7 @@ class _driver_infoState extends State<driver_info> {
                             ),
                             Container(
                               child: Text(
-                                'THB 500.00',
+                                widget.sumprice + ' THB',
                                 style: TextStyle(
                                     fontSize: 18.0,
                                     color: Color(0xff1D3557)

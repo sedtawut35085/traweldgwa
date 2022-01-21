@@ -20,6 +20,8 @@ class _shuttleState extends State<shuttle> {
   double distanceImMeter = 0.0;
   Data data = Data();
   bool checklocation = false;
+  bool value_booknow = false;
+  bool value_advance = true;
 
   Future _checklocation(String address) async {
     try{
@@ -54,7 +56,7 @@ class _shuttleState extends State<shuttle> {
 
   @override
   void initState() {
-    save();
+    // save();
     super.initState();
     _timecontroller = TextEditingController();
     _yourlocationcontroller = TextEditingController();
@@ -81,21 +83,11 @@ class _shuttleState extends State<shuttle> {
 
   Future _price(String address) async{
     double sum_price;
-    // print('_timecontroller');
-    // print(_timecontroller.text);
-    // print(_startdatecontroller.text);
-    // print(_yourlocationcontroller.text);
-    // print(destination);
-    if(checklocation && _timecontroller.text != '' && _startdatecontroller.text != '' && _yourlocationcontroller != null && destination != null){
-      print('price');
+    if(checklocation && ((_timecontroller.text != '' && _startdatecontroller.text != '')|| value_booknow) && _yourlocationcontroller != null && destination != null){
       List<Location> locations = await locationFromAddress(address);
-      print('location');
-      print(locations);
-
       for (int i = 0; i < data.airport.length; i++) {
         double storelat = data.airport[i]['lat'];
         double storelng = data.airport[i]['lng'];
-
         distanceImMeter = await Geolocator.distanceBetween(
           locations[0].latitude,
           locations[0].longitude,
@@ -148,19 +140,46 @@ class _shuttleState extends State<shuttle> {
                   height: 10,
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 70.0 , right: 70),
+                  padding: const EdgeInsets.only(left: 40.0 , right: 60),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        "จองล่วงหน้า",
-                        style: GoogleFonts.nunitoSans(
-                            color: Colors.black, fontSize: 15),
+                      Row(
+                          children:[
+                            Checkbox(
+                              value: this.value_advance,
+                              onChanged: (bool value) {
+                                setState(() {
+                                  this.value_advance = value;
+                                  this.value_booknow = false;
+                                });
+                              },
+                            ),
+                            Text(
+                              "จองล่วงหน้า",
+                              style: GoogleFonts.nunitoSans(
+                                  color: Colors.black, fontSize: 15),
+
+                            ),
+                          ]
                       ),
-                      Text(
-                        "จองเดี๋ยวนี้",
-                        style: GoogleFonts.nunitoSans(
-                            color: Colors.black, fontSize: 15),
+                      Row(
+                          children:[
+                            Checkbox(
+                              value: this.value_booknow,
+                              onChanged: (bool value) {
+                                setState(() {
+                                  this.value_booknow = value;
+                                  this.value_advance = false;
+                                });
+                              },
+                            ),
+                            Text(
+                              "จองเดี๋ยวนี้",
+                              style: GoogleFonts.nunitoSans(
+                                  color: Colors.black, fontSize: 15),
+                            ),
+                          ]
                       ),
                     ],
                   ),
@@ -308,6 +327,7 @@ class _shuttleState extends State<shuttle> {
                 const SizedBox(
                   height: 10,
                 ),
+                if(value_booknow == false)
                 Padding(
                   padding: const EdgeInsets.only(left: 35.0 , right: 145),
                   child: Row(
@@ -326,6 +346,7 @@ class _shuttleState extends State<shuttle> {
                     ],
                   ),
                 ),
+                if(value_booknow == false)
                 Padding(
                   padding: const EdgeInsets.only(left: 15),
                   child: Row(
@@ -394,6 +415,9 @@ class _shuttleState extends State<shuttle> {
                             initialTime: TimeOfDay.now(),
                             context: context,
                           );
+                          FocusScope.of(context)
+                              .requestFocus(FocusNode());
+
                           if(pickedTime != null ){
                             DateTime parsedTime = DateFormat.jm().parse(pickedTime.format(context).toString());
                             String formattedTime = DateFormat('HH:mm').format(parsedTime);
@@ -469,6 +493,7 @@ class _shuttleState extends State<shuttle> {
       ),
     );
   }
+
   void saveOrder(){
     if (!_formKey.currentState.validate()) {
       return;
@@ -481,8 +506,20 @@ class _shuttleState extends State<shuttle> {
     print(destination);
     print(_timecontroller.text);
     print(_yourlocationcontroller.text);
-    save();
-    Navigator.push(context, MaterialPageRoute(builder: (context) => search_driver()));
+    print('value_booknow');
+    print(value_booknow);
+    Navigator.push(context, MaterialPageRoute(builder: (context) => search_driver(
+        startdate: _startdatecontroller.text,
+        typeshuttle: typeshuttle,
+        starttime: _timecontroller.text,
+        destination: destination,
+        yourlocation: _yourlocationcontroller.text,
+        sumprice: price.value,
+        value_booknow: value_booknow,
+
+    ),
+
+    ));
 
   }
 

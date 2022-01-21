@@ -21,4 +21,20 @@ router.post('/register_shuttlepartner',(req,res) => {
 
 })
 
+router.post('/save_invoice',(req,res) => { 
+    console.log('save')
+    const infoinvoice = new shuttle_invoice({
+        username: req.body.username,
+        typeshuttle : req.body.typeshuttle,
+        yourlocation : req.body.yourlocation,
+        destination: req.body.destination,
+        startdate: req.body.startdate,
+        starttime: req.body.starttime,
+        sum_price: req.body.sumprice,})
+    infoinvoice.save()
+
+})
+
+
+
 module.exports = router

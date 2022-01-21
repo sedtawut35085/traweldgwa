@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:se_app2/Home/shuttle/s.dart';
 import 'package:se_app2/Home/shuttle/search_driver.dart';
 import 'package:se_app2/navigator/nav/profile/profile.dart';
 import 'package:se_app2/navigator/nav.dart';
