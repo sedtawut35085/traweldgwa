@@ -147,6 +147,7 @@ class _shuttleState extends State<shuttle> {
                       Row(
                           children:[
                             Checkbox(
+                              shape: CircleBorder(),
                               value: this.value_advance,
                               onChanged: (bool value) {
                                 setState(() {
@@ -159,13 +160,13 @@ class _shuttleState extends State<shuttle> {
                               "จองล่วงหน้า",
                               style: GoogleFonts.nunitoSans(
                                   color: Colors.black, fontSize: 15),
-
                             ),
                           ]
                       ),
                       Row(
                           children:[
                             Checkbox(
+                              shape: CircleBorder(),
                               value: this.value_booknow,
                               onChanged: (bool value) {
                                 setState(() {
