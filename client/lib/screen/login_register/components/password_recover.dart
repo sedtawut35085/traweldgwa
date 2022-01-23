@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:home_and_login/constants.dart';
 import 'package:flutter/gestures.dart';
+
+import '../../../constants.dart';
 
 class Body extends StatelessWidget {
   @override

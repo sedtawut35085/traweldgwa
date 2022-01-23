@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:home_and_login/constants.dart';
-import 'package:home_and_login/components/body.dart';
+
+import 'components/body.dart';
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class LoginScreen extends StatelessWidget {
 }
 
 class RegisterScreen extends StatelessWidget {
-  const RegisterScreen({Key? key}) : super(key: key);
+  const RegisterScreen({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,7 @@ class RegisterScreen extends StatelessWidget {
 }
 
 class PasswordScreen extends StatelessWidget {
-  const PasswordScreen({Key? key}) : super(key: key);
+  const PasswordScreen({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

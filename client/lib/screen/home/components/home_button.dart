@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:home_and_login/constants.dart';
+import '../../../constants.dart';
 import 'package:flutter/gestures.dart';
 
 class Home extends StatelessWidget {
@@ -59,7 +59,7 @@ class Home extends StatelessWidget {
                   width: 90,
                   height: 80,
                   decoration: BoxDecoration(
-                    color: boxColor,
+                    color: Colors.black,
                     borderRadius: BorderRadius.all(Radius.circular(14),),
                     boxShadow: [
                       BoxShadow(

@@ -1,20 +1,44 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
+import 'package:http/http.dart' as http;
 
 class driver_info extends StatefulWidget {
   String startdate,yourlocation,destination,starttime,typeshuttle,sumprice;
   bool value_booknow;
-
-
-
-
 
   driver_info({this.startdate,this.yourlocation,this.destination,this.starttime,this.typeshuttle,this.sumprice,this.value_booknow});
   @override
   _driver_infoState createState() => _driver_infoState();
 }
 class _driver_infoState extends State<driver_info> {
+
+
+
+  Future save_invoice() async {
+    String typereserve,username = '';
+    if(widget.value_booknow){
+      typereserve = 'จองเดี๋ยวนี้';
+    }else{
+      typereserve = 'จองล่วงหน้า';
+    }
+    var res = await http.post("http://10.0.2.2:8080/shuttle/save_invoice",
+        headers: <String, String>{
+          'Context-Type': 'application/json;charSet=UTF-8'
+        },
+        body: <String, String>{
+          "username" : username,
+          "typereserve": typereserve,
+          "typeshuttle": widget.typeshuttle,
+          "yourlocation": widget.yourlocation,
+          "destination": widget.destination,
+          "startdate": widget.startdate,
+          "starttime": widget.starttime,
+          "sum_price": widget.sumprice,
+        });
+    print(res.body);
+  }
+
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
@@ -58,15 +82,16 @@ class _driver_infoState extends State<driver_info> {
                     )// <-- Radius
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(10.0),
+                  padding: const EdgeInsets.fromLTRB(20.10,10,10,10),
                   child: Container(
                     child: Row(
                       children: <Widget>[
                         Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             CircleAvatar(
                               radius: 30,
-                              // backgroundImage: NetworkImage(''),
+                              backgroundImage: NetworkImage('https://t1.blockdit.com/photos/2020/11/5fb952383d4b9b0cc0fd7d2e_800x0xcover_3aaaqsST.jpg'),
                             ),
                           ],
                         ),
@@ -144,14 +169,6 @@ class _driver_infoState extends State<driver_info> {
                           children: [
                             Row(
                               children: [
-                                Column(
-                                  children: [
-                                    Icon(
-                                      Icons.phone_enabled_sharp,
-                                      color: Color(0xff1D3557),
-                                    ),
-                                  ],
-                                ),
                                 SizedBox(width: 5.0,),
                                 Column(
                                   children: [
@@ -323,12 +340,13 @@ class _driver_infoState extends State<driver_info> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Container(
+                              width: 85,
                               child: Text(
                                 'ราคา',
                                 style: TextStyle(
                                     fontSize: 18.0,
                                     color: Color(0xff1D3557)
-                                ),
+                                ),textAlign: TextAlign.center,
                               ),
                             ),
                             Container(
@@ -375,6 +393,8 @@ class _driver_infoState extends State<driver_info> {
                             borderWidth: 2,
                             text: "ดำเนินการต่อ",
                             onPress: () {
+                              save_invoice();
+
                               // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>
                               // new shuttle()));
                             })),

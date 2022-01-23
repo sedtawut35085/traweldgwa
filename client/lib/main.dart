@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:se_app2/Home/shuttle/search_driver.dart';
 import 'package:se_app2/navigator/nav/profile/profile.dart';
 import 'package:se_app2/navigator/nav.dart';
+import 'package:se_app2/screen/home/home.dart';
+import 'package:se_app2/screen/login_register/login.dart';
 import 'Home/shuttle/shuttle.dart';
 import 'navigator/nav.dart';
 import 'package:se_app2/Home/hotel/hotel.dart';
@@ -17,7 +19,7 @@ void main() async {
   );
   WidgetsFlutterBinding.ensureInitialized();
 
-  runApp(MaterialApp(home: shuttle()));
+  runApp(MaterialApp(home: RegisterScreen()));
 }
 
 class MyApp extends StatelessWidget {

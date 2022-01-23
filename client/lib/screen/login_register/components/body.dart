@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:home_and_login/constants.dart';
+import 'package:se_app2/screen/home/components/homepage.dart';
+import 'package:se_app2/screen/login_register/components/register_form.dart';
 
-import 'package:home_and_login/components/login_regis_header.dart';
-import 'package:home_and_login/components/login_form.dart';
-import 'package:home_and_login/components/register_form.dart';
-import 'package:home_and_login/components/password_recover.dart';
+import '../../../constants.dart';
+import 'login_form.dart';
+import 'login_regis_header.dart';
 
 class Body extends StatelessWidget {
   @override

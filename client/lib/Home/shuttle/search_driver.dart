@@ -100,7 +100,10 @@ class _search_driverState extends State<search_driver> {
                               ),
                             ),
                             Container(
-                                child: Text(widget.startdate)
+                                child: Text(widget.startdate,style: TextStyle(
+                                    fontSize: 18.0,
+                                    color: Color(0xff1D3557)
+                                ))
                             ),
                           ],
                         ),
@@ -222,12 +225,13 @@ class _search_driverState extends State<search_driver> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Container(
+                              width: 85,
                               child: Text(
                                 'ราคา',
                                 style: TextStyle(
                                     fontSize: 18.0,
                                     color: Color(0xff1D3557)
-                                ),
+                                ),textAlign: TextAlign.center,
                               ),
                             ),
                             Container(
