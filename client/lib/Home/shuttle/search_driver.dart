@@ -60,7 +60,7 @@ class _search_driverState extends State<search_driver> {
                     children: [
                       Icon(
                         Icons.search,
-                        size: 200,
+                        size: 150,
                         color: Color(0xff1D3557),
                       ),
                       Text(
@@ -91,19 +91,22 @@ class _search_driverState extends State<search_driver> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Container(
+                              width: 85,
                               child: Text(
                                 'วันที่',
                                 style: TextStyle(
                                     fontSize: 18.0,
                                     color: Color(0xff1D3557)
-                                ),
+                                ),textAlign: TextAlign.center,
                               ),
                             ),
                             Container(
+                              width: 85,
                                 child: Text(widget.startdate,style: TextStyle(
                                     fontSize: 18.0,
                                     color: Color(0xff1D3557)
-                                ))
+                                ),textAlign: TextAlign.center,
+                                )
                             ),
                           ],
                         ),
@@ -112,21 +115,23 @@ class _search_driverState extends State<search_driver> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Container(
+                              width: 85,
                               child: Text(
                                 'เวลา',
                                 style: TextStyle(
                                     fontSize: 18.0,
                                     color: Color(0xff1D3557)
-                                ),
+                                ),textAlign: TextAlign.center,
                               ),
                             ),
                             Container(
+                              width: 85,
                               child: Text(
                                 widget.starttime,
                                 style: TextStyle(
                                     fontSize: 18.0,
                                     color: Color(0xff1D3557)
-                                ),
+                                ),textAlign: TextAlign.center,
                               ),
                             ),
                           ],
@@ -135,21 +140,23 @@ class _search_driverState extends State<search_driver> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Container(
+                              width: 85,
                               child: Text(
                                 'ประเภทรถ',
                                 style: TextStyle(
                                     fontSize: 18.0,
                                     color: Color(0xff1D3557)
-                                ),
+                                ),textAlign: TextAlign.center,
                               ),
                             ),
                             Container(
+                              width: 85,
                               child: Text(
                                 widget.typeshuttle,
                                 style: TextStyle(
                                     fontSize: 18.0,
                                     color: Color(0xff1D3557)
-                                ),
+                                ),textAlign: TextAlign.center,
                               ),
                             ),
                           ],
@@ -173,7 +180,7 @@ class _search_driverState extends State<search_driver> {
                                 Container(
                                   width: 85,
                                   child: Text(
-                                    widget.yourlocation.length > 16 ? widget.yourlocation.substring(0,16)+'...' : widget.yourlocation,
+                                    widget.yourlocation.length > 40 ? widget.yourlocation.substring(0,40)+'...' : widget.yourlocation,
                                     style: TextStyle(
                                       color: Color(0xff1D3557),
                                       fontSize: 14.0,
@@ -204,11 +211,14 @@ class _search_driverState extends State<search_driver> {
                                   ),
                                 ),
                                 SizedBox(height: 10.0),
-                                Text(
-                                  widget.destination,
-                                  style: TextStyle(
-                                    color: Color(0xff1D3557),
-                                    fontSize: 14.0,
+                                Container(
+                                  width: 90,
+                                  child: Text(
+                                    widget.destination,
+                                    style: TextStyle(
+                                      color: Color(0xff1D3557),
+                                      fontSize: 14.0,
+                                    ),textAlign: TextAlign.center,
                                   ),
                                 ),
                               ],

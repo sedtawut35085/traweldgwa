@@ -82,34 +82,49 @@ class _shuttleState extends State<shuttle> {
 
 
   Future _price(String address) async{
+    print('price');
     double sum_price;
-    if(checklocation && ((_timecontroller.text != '' && _startdatecontroller.text != '')|| value_booknow) && _yourlocationcontroller != null && destination != null){
-      List<Location> locations = await locationFromAddress(address);
-      for (int i = 0; i < data.airport.length; i++) {
-        double storelat = data.airport[i]['lat'];
-        double storelng = data.airport[i]['lng'];
-        distanceImMeter = await Geolocator.distanceBetween(
-          locations[0].latitude,
-          locations[0].longitude,
-          storelat,
-          storelng,
-        );
-        var distance = distanceImMeter?.round().toInt();
-        data.airport[i]['distance'] = (distance / 1000 );
-        if(data.airport[i]['name'] == destination){
-          print(data.airport[i]['distance']);
-          if(typeshuttle == 'รถเก๋ง'){
-            sum_price = (35 + data.airport[i]['distance'] * 3);
+    try{
+      if(((_timecontroller.text != '' && _startdatecontroller.text != '')|| value_booknow) && _yourlocationcontroller != null && destination != null){
+        print('price change');
+        print(address);
+        List<Location> locations = await locationFromAddress(address);
+        try{
+          for (int i = 0; i < data.airport.length; i++) {
+            double storelat = data.airport[i]['lat'];
+            double storelng = data.airport[i]['lng'];
+            distanceImMeter = await Geolocator.distanceBetween(
+              locations[0].latitude,
+              locations[0].longitude,
+              storelat,
+              storelng,
+            );
+            var distance = distanceImMeter?.round().toInt();
+            data.airport[i]['distance'] = (distance / 1000 );
+            if(data.airport[i]['name'] == destination){
+              print(data.airport[i]['distance']);
+              if(typeshuttle == 'รถเก๋ง'){
+                sum_price = (35 + data.airport[i]['distance'] * 3);
+              }
+              if(typeshuttle == 'รถตู้'){
+                sum_price = 100 + data.airport[i]['distance'] * 5;
+              }
+              price.value = sum_price.toStringAsFixed(2).toString();
+              print('price');
+              print(price);
+            }
+            setState(() {});
           }
-          if(typeshuttle == 'รถตู้'){
-            sum_price = 100 + data.airport[i]['distance'] * 5;
-          }
-          price.value = sum_price.toStringAsFixed(2).toString();
-          print('price');
-          print(price);
+        }catch(e){
+          print('----');
+
         }
-        setState(() {});
       }
+    }catch(e){
+      print('error');
+      print(e);
+      price.value = '--';
+
     }
   }
 
@@ -208,7 +223,7 @@ class _shuttleState extends State<shuttle> {
                   child: Container(
                     width: 362,
                     margin: const EdgeInsets.all(10),
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
                     decoration: BoxDecoration(
                       color:Colors.white,
                       borderRadius: BorderRadius.circular(14),
@@ -216,16 +231,11 @@ class _shuttleState extends State<shuttle> {
                     ),
                     child:  DropdownButtonFormField<String>(
                       decoration: const InputDecoration(
+                        prefixIcon: Icon(Icons.airport_shuttle,color: Colors.black,),
                         enabledBorder: UnderlineInputBorder(
                             borderSide: BorderSide(color: Colors.white)),
                       ),
-                      hint: const Text('รถเก๋ง',style: TextStyle(color: Colors.black),),
-                      // hint: Row(
-                      //     children: const <Widget>[
-                      //       Icon(Icons.directions_car ,size: 20,),
-                      //       Text('      ' + 'รถเก๋ง',style: TextStyle(color: Colors.black)),
-                      //     ]
-                      // ),
+                      hint: const Text(' รถเก๋ง',style: TextStyle(color: Colors.black),),
                       value: valuetype,
                       iconSize: 16,
                       icon: const Icon(Icons.arrow_drop_down, color: Colors.black,),
@@ -254,7 +264,7 @@ class _shuttleState extends State<shuttle> {
                   child: Container(
                       width: 362,
                       margin: const EdgeInsets.all(10),
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
                       decoration: BoxDecoration(
                         color:Colors.white,
                         borderRadius: BorderRadius.circular(14),
@@ -262,13 +272,14 @@ class _shuttleState extends State<shuttle> {
                       ),
                       child: TextFormField(
                         decoration: const InputDecoration(
-                          hintText: 'เลขที่ ซอย ตำบล รหัสไปรษณีย์',
+                          hintText: ' เลขที่ ซอย ตำบล รหัสไปรษณีย์',
+                          prefixIcon: Icon(Icons.fmd_good,color: Colors.black,),
                           enabledBorder: UnderlineInputBorder(
                               borderSide: BorderSide(color: Colors.white)),
                         ),
                         controller: _yourlocationcontroller,
                         onFieldSubmitted: (String newvalue) {
-                          _checklocation(newvalue);
+                           _checklocation(newvalue);
                           _price(_yourlocationcontroller.text);
                         },
                         validator: (value) {
@@ -298,31 +309,36 @@ class _shuttleState extends State<shuttle> {
                   child: Container(
                     width: 362,
                     margin: const EdgeInsets.all(10),
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
                     decoration: BoxDecoration(
                       color:Colors.white,
                       borderRadius: BorderRadius.circular(14),
                       border:  Border.all(color:const Color(0xFFB0BEC5),width: 1),
                     ),
-                    child:  DropdownButtonFormField<String>(
-                      decoration: const InputDecoration(
-                        enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white)),
+                    child:  Container(
+                      child:
+                      DropdownButtonFormField<String>(
+                        decoration: const InputDecoration(
+                          hintText: ' กรุณาระบุที่ตั้งสนามบิน',
+                          prefixIcon: Icon(Icons.airplanemode_active,color: Colors.black,),
+                          enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white)),
+                        ),
+                        // hint: const Text('กรุณาระบุที่ตั้งสนามบิน',style: TextStyle(color: Color(0xFF757575)),),
+                        value: destination,
+                        iconSize: 16,
+                        icon: const Icon(Icons.arrow_drop_down, color: Colors.black,),
+                        isExpanded: true,
+                        items: item_airport.map(buildMenuItem).toList(),
+                        validator: (value) => value == null ? "Select a country" : null,
+                        onChanged: (String newValue) {
+                          setState(() {
+                            destination = newValue;
+                            _price(_yourlocationcontroller.text);
+                          });
+                        },
                       ),
-                      hint: const Text('กรุณาระบุที่ตั้งสนามบิน',style: TextStyle(color: Color(0xFF757575)),),
-                      value: destination,
-                      iconSize: 16,
-                      icon: const Icon(Icons.arrow_drop_down, color: Colors.black,),
-                      isExpanded: true,
-                      items: item_airport.map(buildMenuItem).toList(),
-                      validator: (value) => value == null ? "Select a country" : null,
-                      onChanged: (String newValue) {
-                        setState(() {
-                          destination = newValue;
-                          _price(_yourlocationcontroller.text);
-                        });
-                      },
-                    ),
+                    )
                   ),
                 ),
                 const SizedBox(
@@ -352,82 +368,97 @@ class _shuttleState extends State<shuttle> {
                   padding: const EdgeInsets.only(left: 15),
                   child: Row(
                     children: [
-                      AnimatedTextFormField(
-                        backgroundColor: Colors.white,
-                        width: 150,
-                        height: 48.0,
-                        inputType: TextInputType.text,
-                        hintText: "วว-ดด-ปป",
-                        validator: (value) {
-                          if (value.isEmpty || value == null) {
-                            return 'กรุณาระบุวันเดินทาง';
-                          }
-                          return null;
-                        },
-                        textStyle: const TextStyle(
-                          color: Color(0xFF757575),
-                          fontSize: 16.0,
-                        ),
-                        controller: _startdatecontroller,
-                        focusNode: myFocusNode3,
-                        cornerRadius: BorderRadius.circular(14.0),
-                        onTap: () async {
-                          DateTime date = DateTime(1900);
+                      Container(
+                          width: 165,
+                          margin: const EdgeInsets.all(10),
+                          padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 2),
+                          decoration: BoxDecoration(
+                            color:Colors.white,
+                            borderRadius: BorderRadius.circular(14),
+                            border:  Border.all(color:Color(0xFFB0BEC5),width: 1),
+                          ),
+                        child:  TextFormField(
+                          decoration: const InputDecoration(
+                            hintText: ' วว-ดด-ปป',
+                            prefixIcon: Icon(Icons.calendar_today,color: Colors.black,),
+                            enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white)),
+                          ),
+                          validator: (value) {
+                            if (value.isEmpty || value == null) {
+                              return 'กรุณาระบุวันเดินทาง';
+                            }
+                            return null;
+                          },
+                          controller: _startdatecontroller,
+                          focusNode: myFocusNode3,
+                          onTap: () async {
+                            DateTime date = DateTime(1900);
 
-                          FocusScope.of(context)
-                              .requestFocus(FocusNode());
+                            FocusScope.of(context)
+                                .requestFocus(FocusNode());
 
-                          date = await showDatePicker(
-                              context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime(1900),
-                              lastDate: DateTime(2100));
-                          var formattedDate =
-                              "${date.day}-${date.month}-${date.year}";
-                          _startdatecontroller.text =
-                              formattedDate.toString();
-                          _price(_yourlocationcontroller.text);
-                        },
-                      ),
-                      const SizedBox(
-                        width: 34,
-                      ),
-                      AnimatedTextFormField(
-                        backgroundColor: Colors.white,
-                        width: 150,
-                        height: 48.0,
-                        inputType: TextInputType.text,
-                        hintText: "00:00",
-                        validator: (value) {
-                          if (value.isEmpty || value == null) {
-                            return 'กรุณาระบุเวลา';
-                          }
-                          return null;
-                        },
-                        textStyle: const TextStyle(
-                          color: Color(0xFF757575),
-                          fontSize: 16.0,
-                        ),
-                        controller: _timecontroller,
-                        focusNode: myFocusNode4,
-                        cornerRadius: BorderRadius.circular(14.0),
-                        onTap: () async {
-                          TimeOfDay pickedTime =  await showTimePicker(
-                            initialTime: TimeOfDay.now(),
-                            context: context,
-                          );
-                          FocusScope.of(context)
-                              .requestFocus(FocusNode());
-
-                          if(pickedTime != null ){
-                            DateTime parsedTime = DateFormat.jm().parse(pickedTime.format(context).toString());
-                            String formattedTime = DateFormat('HH:mm').format(parsedTime);
-                            _timecontroller.text = formattedTime.toString();
+                            date = await showDatePicker(
+                                context: context,
+                                initialDate: DateTime.now(),
+                                firstDate: DateTime(1900),
+                                lastDate: DateTime(2100));
+                            var formattedDate =
+                                "${date.day}-${date.month}-${date.year}";
+                            _startdatecontroller.text =
+                                formattedDate.toString();
                             _price(_yourlocationcontroller.text);
-                          }else{
-                            print("Time is not selected");
-                          }
-                        },
+                          },
+                        ),
+
+                      ),
+
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Container(
+                          width: 162,
+                          margin: const EdgeInsets.all(10),
+                          padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 2),
+                          decoration: BoxDecoration(
+                            color:Colors.white,
+                            borderRadius: BorderRadius.circular(14),
+                            border:  Border.all(color:Color(0xFFB0BEC5),width: 1),
+                          ),
+                        child: TextFormField(
+                          decoration: const InputDecoration(
+                            contentPadding: EdgeInsets.fromLTRB(0, 15, 0, 0),
+                            hintText: ' 00:00',
+                            prefixIcon: Icon(Icons.access_time_outlined,color: Colors.black,),
+                            enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white)),
+                          ),
+                          validator: (value) {
+                            if (value.isEmpty || value == null) {
+                              return 'กรุณาระบุเวลา';
+                            }
+                            return null;
+                          },
+                          controller: _timecontroller,
+                          focusNode: myFocusNode4,
+                          onTap: () async {
+                            TimeOfDay pickedTime =  await showTimePicker(
+                              initialTime: TimeOfDay.now(),
+                              context: context,
+                            );
+                            FocusScope.of(context)
+                                .requestFocus(FocusNode());
+
+                            if(pickedTime != null ){
+                              DateTime parsedTime = DateFormat.jm().parse(pickedTime.format(context).toString());
+                              String formattedTime = DateFormat('HH:mm').format(parsedTime);
+                              _timecontroller.text = formattedTime.toString();
+                              _price(_yourlocationcontroller.text);
+                            }else{
+                              print("Time is not selected");
+                            }
+                          },
+                        ),
                       ),
                     ],
                   ),

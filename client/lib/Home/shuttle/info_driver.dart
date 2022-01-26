@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animated_button/flutter_animated_button.dart';
 import 'package:http/http.dart' as http;
+import 'package:se_app2/Home/shuttle/confirm_driver.dart';
 
 class driver_info extends StatefulWidget {
   String startdate,yourlocation,destination,starttime,typeshuttle,sumprice;
@@ -12,32 +13,6 @@ class driver_info extends StatefulWidget {
   _driver_infoState createState() => _driver_infoState();
 }
 class _driver_infoState extends State<driver_info> {
-
-
-
-  Future save_invoice() async {
-    String typereserve,username = '';
-    if(widget.value_booknow){
-      typereserve = 'จองเดี๋ยวนี้';
-    }else{
-      typereserve = 'จองล่วงหน้า';
-    }
-    var res = await http.post("http://10.0.2.2:8080/shuttle/save_invoice",
-        headers: <String, String>{
-          'Context-Type': 'application/json;charSet=UTF-8'
-        },
-        body: <String, String>{
-          "username" : username,
-          "typereserve": typereserve,
-          "typeshuttle": widget.typeshuttle,
-          "yourlocation": widget.yourlocation,
-          "destination": widget.destination,
-          "startdate": widget.startdate,
-          "starttime": widget.starttime,
-          "sum_price": widget.sumprice,
-        });
-    print(res.body);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,6 +76,7 @@ class _driver_infoState extends State<driver_info> {
                           children: [
                             Row(
                               children: [
+
                                 Text(
                                   'นายสมปอง ดองงาน',
                                   style: TextStyle(
@@ -202,16 +178,19 @@ class _driver_infoState extends State<driver_info> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
+
                             Container(
+                              width: 85,
                               child: Text(
                                 'วันที่',
                                 style: TextStyle(
                                     fontSize: 18.0,
                                     color: Color(0xff1D3557)
-                                ),
+                                ),textAlign: TextAlign.center
                               ),
                             ),
                             Container(
+                                width: 85,
                                 child: Text(widget.startdate, style: TextStyle(
                                     fontSize: 18.0,
                                     color: Color(0xff1D3557)
@@ -226,21 +205,23 @@ class _driver_infoState extends State<driver_info> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Container(
+                              width: 85,
                               child: Text(
                                 'เวลา',
                                 style: TextStyle(
                                     fontSize: 18.0,
                                     color: Color(0xff1D3557)
-                                ),
+                                ),textAlign: TextAlign.center
                               ),
                             ),
                             Container(
+                              width: 85,
                               child: Text(
                                 widget.starttime,
                                 style: TextStyle(
                                     fontSize: 18.0,
                                     color: Color(0xff1D3557)
-                                ),
+                                ),textAlign: TextAlign.center
                               ),
                             ),
                           ],
@@ -251,21 +232,23 @@ class _driver_infoState extends State<driver_info> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Container(
+                              width: 85,
                               child: Text(
                                 'ประเภทรถ',
                                 style: TextStyle(
                                     fontSize: 18.0,
                                     color: Color(0xff1D3557)
-                                ),
+                                ),textAlign: TextAlign.center
                               ),
                             ),
                             Container(
+                              width: 85,
                               child: Text(
                                 widget.typeshuttle,
                                 style: TextStyle(
                                     fontSize: 18.0,
                                     color: Color(0xff1D3557)
-                                ),
+                                ),textAlign: TextAlign.center
                               ),
                             ),
                           ],
@@ -335,7 +318,7 @@ class _driver_infoState extends State<driver_info> {
                             ),
                           ],
                         ),
-                        SizedBox(height: 10,),
+                        SizedBox(height: 15,),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -393,7 +376,16 @@ class _driver_infoState extends State<driver_info> {
                             borderWidth: 2,
                             text: "ดำเนินการต่อ",
                             onPress: () {
-                              save_invoice();
+                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>
+                                  summary( startdate: widget.startdate,
+                                    typeshuttle: widget.typeshuttle,
+                                    starttime: widget.starttime,
+                                    destination: widget.destination,
+                                    yourlocation: widget.yourlocation,
+                                    sumprice: widget.sumprice,
+                                    value_booknow: widget.value_booknow,
+                                  )));
+
 
                               // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>
                               // new shuttle()));
